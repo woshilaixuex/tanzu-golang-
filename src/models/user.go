@@ -36,7 +36,7 @@ type History struct {
 	Emission int64
 }
 
-// 233
+// CreatUserModels 创建用户模型
 func CreatUserModels(db *gorm.DB) {
 	defer func() {
 		if err := recover(); err != nil {

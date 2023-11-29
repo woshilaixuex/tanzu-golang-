@@ -10,6 +10,9 @@ const dsn = "root:123456@tcp(127.0.0.1:3306)/tanzu_db?charset=utf8mb4&parseTime=
 func CreateDB() (*gorm.DB, error) {
 	return gorm.Open(mysql.Open(dsn), &gorm.Config{})
 }
+func SelectUser(db *gorm.DB) {
+
+}
 func SelectAllUser(db *gorm.DB) {
 
 }
