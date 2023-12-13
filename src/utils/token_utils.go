@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/dgrijalva/jwt-go"
-	"goweb/models"
+	"goweb/data-models"
 	"log"
 	"time"
 )
@@ -15,7 +15,7 @@ type GoClaims struct {
 	jwt.StandardClaims
 }
 
-func CreatToken(user models.User) (string, error) {
+func CreatToken(user data_models.User) (string, error) {
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodES256, GoClaims{
 		ID:       user.ID,
 		Username: user.UserName,
