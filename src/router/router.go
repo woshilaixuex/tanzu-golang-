@@ -18,7 +18,7 @@ func InitRouter() {
 	basicAPI := r.Group("/tanzu")
 	basicAPI.GET("/vercode", api.Vcode)
 	basicAPI.POST("/user/login", api.Login)
-	basicAPI.POST("/user/register", api.Login)
+	basicAPI.POST("/user/register", api.Register)
 
 	err := r.Run(":8080")
 	if err != nil {

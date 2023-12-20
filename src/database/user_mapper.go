@@ -24,7 +24,7 @@ func InsertUser(user *data_models.User) (*data_models.User, error) {
 
 func SelectUserByID(username string) (*data_models.User, error) {
 	var user *data_models.User
-	result := db.Db.Where("user_name = ?", username).Take(user)
+	result := db.Db.Where("user_name = ?", username).Take(&user)
 	if result.Error != nil {
 
 	}

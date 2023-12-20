@@ -31,11 +31,6 @@ type UserInform struct {
 	Email    string
 }
 
-type History struct {
-	Time     string
-	Emission int64
-}
-
 // CreatUserModels 创建用户模型
 func CreatUserModels(db *gorm.DB) {
 	defer func() {

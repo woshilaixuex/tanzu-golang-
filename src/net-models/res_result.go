@@ -1,15 +1,15 @@
 package net_models
 
-var code = map[string]uint{
+var Code = map[string]uint{
 	"SECCEED": 200,
 	"ERROR":   400,
 }
 
 // ResResult 响应体
 type ResResult struct {
-	code uint
-	msg  string
-	Data interface{}
+	Code uint        `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 func (response *ResResult) GetData() interface{} {
@@ -18,24 +18,24 @@ func (response *ResResult) GetData() interface{} {
 
 func ResSucceed(data interface{}) ResResult {
 	return ResResult{
-		code: code["SECCEED"],
-		msg:  "succeed",
+		Code: Code["SECCEED"],
+		Msg:  "succeed",
 		Data: data,
 	}
 }
 
 func ResErr(msg string, state string) ResResult {
 	return ResResult{
-		code: code[state],
-		msg:  msg,
+		Code: Code[state],
+		Msg:  msg,
 		Data: nil,
 	}
 }
 
 func Pending(data interface{}) ResResult {
 	return ResResult{
-		code: 0,
-		msg:  "pending",
+		Code: 0,
+		Msg:  "pending",
 		Data: data,
 	}
 }

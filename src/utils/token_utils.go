@@ -16,7 +16,7 @@ type GoClaims struct {
 }
 
 func CreatToken(user data_models.User) (string, error) {
-	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodES256, GoClaims{
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, GoClaims{
 		ID:       user.ID,
 		Username: user.UserName,
 		StandardClaims: jwt.StandardClaims{
@@ -25,7 +25,7 @@ func CreatToken(user data_models.User) (string, error) {
 			Issuer:    "lyric",
 		},
 	})
-	token, err := tokenClaims.SignedString(key)
+	token, err := tokenClaims.SignedString([]byte(key))
 	if err != nil {
 		log.Println(err)
 		return "", err

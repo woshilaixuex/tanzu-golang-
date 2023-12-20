@@ -3,9 +3,7 @@ package api
 import (
 	"errors"
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	database "goweb/database"
 	net_models "goweb/net-models"
 	"goweb/utils"
@@ -44,31 +42,40 @@ func Vcode(c *gin.Context) {
 func Login(c *gin.Context) {
 	response, err := ApiGetVcode(c)
 	if err != nil {
+		log.Println(response)
 		c.JSON(http.StatusBadRequest, response)
+		return
 	}
 	//查询数据库
-	user, err := database.UserLoginDataServer(response.Data.(net_models.UserLogin))
-	if err != nil {
+	if response.Data == nil {
 		c.JSON(http.StatusBadRequest, net_models.ResErr(err.Error(), "ERROR"))
+		return
+	} else {
+		user, err := database.UserLoginDataServer(response.Data.(net_models.UserLogin))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, net_models.ResErr(err.Error(), "ERROR"))
+			return
+		}
+		token, errr := utils.CreatToken(*user)
+		if errr != nil {
+			c.JSON(http.StatusBadRequest, net_models.ResErr(errr.Error(), "ERROR"))
+			return
+		}
+		c.JSON(http.StatusOK, net_models.ResSucceed(token))
 	}
-	c.JSON(http.StatusOK, net_models.ResSucceed(user))
-	return
 }
 
 func Register(c *gin.Context) {
-	response, err := ApiGetVcode(c)
+	var login_user net_models.UserLogin
+	if err := c.ShouldBindJSON(&login_user); err != nil {
+		c.JSON(http.StatusBadRequest, net_models.ResErr(err.Error(), "ERROR"))
+	}
+	user, err := database.UserRegisterDataServer(login_user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusBadRequest, net_models.ResErr(err.Error(), "ERROR"))
+		return
 	}
-}
+	token, _ := utils.CreatToken(*user)
+	c.JSON(http.StatusOK, net_models.ResSucceed(token))
 
-func CreateUserServe(r *gin.Engine, db *gorm.DB) error {
-	store := cookie.NewStore([]byte("relink"))
-	r.Use(sessions.Sessions("session", store))
-	//f, _ := os.Create("gin.log")
-	//gin.DefaultWriter = io.MultiWriter(f)
-	if ginErr := r.Run(); ginErr != nil {
-		log.Panic(ginErr)
-	}
-	return nil
 }

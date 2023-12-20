@@ -7,12 +7,24 @@ import (
 	"log"
 )
 
-func UserRegisterDataServer() {
-
+func UserRegisterDataServer(userLogin net_models.UserLogin) (*data_models.User, error) {
+	user, _ := SelectUserByID(userLogin.Username)
+	if user.UserName != "" {
+		return nil, errors.New("用户已存在")
+	}
+	user, _ = InsertUser(&data_models.User{
+		UserName: userLogin.Username,
+		PassWord: userLogin.Password,
+	})
+	if user == nil {
+		log.Println("用户创建失败")
+	}
+	user.PassWord = ""
+	return user, nil
 }
 func UserLoginDataServer(userLogin net_models.UserLogin) (*data_models.User, error) {
 	user, err := SelectUserByID(userLogin.Username)
-	if err != nil {
+	if err != nil || user == nil {
 		log.Println("用户不存在")
 		return nil, errors.New("用户不存在")
 	}

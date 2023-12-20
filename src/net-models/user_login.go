@@ -1,7 +1,7 @@
 package net_models
 
 type UserLogin struct {
-	Username string
-	Password string
-	Vercode  string
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Vercode  string `json:"vercode"`
 }
